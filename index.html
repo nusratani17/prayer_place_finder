@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nearby Women’s Prayer Places</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    #map {
+      height: 80vh;
+      width: 100%;
+    }
+    h1 {
+      background-color: #6a9b8c;
+      color: white;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #6a9b8c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Find Nearby Women’s Prayer Places 🕌</h1>
+  <button onclick="getLocation()">📍 Detect My Location</button>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    let map = L.map('map').setView([23.8103, 90.4125], 13); // Default: Dhaka
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    function showPosition(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      map.setView([lat, lon], 15);
+      L.marker([lat, lon]).addTo(map).bindPopup("You are here").openPopup();
+    }
+
+    function showError(error) {
+      alert("Location access denied or failed.");
+    }
+
+    // Sample Data – You can replace with real data later
+    const prayerPlaces = [
+      {
+        name: "Baitul Noor Mosque",
+        lat: 23.8123,
+        lon: 90.4155,
+        womenFriendly: true
+      },
+      {
+        name: "Green Valley Mosque",
+        lat: 23.8140,
+        lon: 90.4102,
+        womenFriendly: true
+      },
+      {
+        name: "Men Only Mosque",
+        lat: 23.8111,
+        lon: 90.4088,
+        womenFriendly: false
+      }
+    ];
+
+    prayerPlaces.forEach(place => {
+      if (place.womenFriendly) {
+        L.marker([place.lat, place.lon])
+          .addTo(map)
+          .bindPopup(<strong>${place.name}</strong><br/>Women can pray here);
+      }
+    });
+  </script>
+</body>
+</html>
